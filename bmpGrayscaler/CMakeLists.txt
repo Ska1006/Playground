@@ -7,7 +7,7 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 add_executable(bmpGrayscaler main.cpp
     bitmap.h bitmap.cpp
-    grayscaletask.h grayscaletask.cpp)
+)
 
 include(GNUInstallDirs)
 install(TARGETS bmpGrayscaler
