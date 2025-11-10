@@ -6,20 +6,24 @@ BMP::Bitmap::Bitmap(char * data, int size)
     this->data = data;
     if (size < sizeof(FileHeader) + sizeof(InfoHeader))
     {
+        // Not enoght size
         return;
     }
     fileHeader = reinterpret_cast<FileHeader *>(this->data);
     if (fileHeader->bfType != BMPMagic)
     {
+        // data is not BMP
         return;
     }
     infoHeader = reinterpret_cast<InfoHeader *>(this->data + sizeof(FileHeader));
     if (infoHeader->biBitCount != 24)
     {
+        // Another bitsPerPixel formats not supported
         return;
     }
+    // Make lines pointers
     lines = new uint8 *[infoHeader->biHeight];
-    int lineSize = infoHeader->biWidth * 3.;
+    lineSize = infoHeader->biWidth * 3.;
     if (lineSize % 4 != 0)
     {
         lineSize = lineSize % 4 + 4;

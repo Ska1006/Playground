@@ -10,6 +10,7 @@
 #include <thread>
 #include <vector>
 using namespace std;
+namespace fs = std::filesystem;
 struct Config
 {
     string inputPath{};
@@ -89,76 +90,82 @@ void Config::print()
 
 int main(int argCnt, char ** args)
 {
+    // Read config
     Config config;
     if (!parseArgs(argCnt, args, config))
     {
-        return 0;
+        return 1;
     }
     config.print();
 
+    auto start = chrono::high_resolution_clock::now(); // Start time measure
+
+    // Make tasks
     using Task = std::function<void()>;
     vector<Task> tasks;
     std::atomic<int> lastTask{0};
-    auto start = chrono::high_resolution_clock::now();
-    vector<thread> threads;
-    ::filesystem::path inputDir(config.inputPath);
-    if (::filesystem::is_directory(inputDir))
+    ::fs::path inputDir(config.inputPath);
+    if (::fs::is_directory(inputDir))
     {
-        ::filesystem::path outputDir(config.outputPath);
-        if (!::filesystem::exists(outputDir))
+        ::fs::path outputDir(config.outputPath);
+        if (!::fs::exists(outputDir))
         {
-            ::filesystem::create_directories(outputDir);
+            // Create output directiory if not exists
+            ::fs::create_directories(outputDir);
             cout << config.outputPath << " created!\n";
             flush(cout);
         }
-        else if (::filesystem::exists(outputDir) && !::filesystem::is_directory(outputDir))
+        else if (::fs::exists(outputDir) && !::fs::is_directory(outputDir))
         {
             cout << config.outputPath << " exists and not a directory!\n";
-            return 0;
+            return 1;
         }
-        for (auto const & dir_entry : std::filesystem::directory_iterator{inputDir})
+
+        string const bmpExtension(".bmp");
+        for (auto const & dirEntry : fs::directory_iterator{inputDir})
         {
-            string filename = dir_entry.path().string();
-            if (filename.find(".bmp") != string::npos)
+            if (dirEntry.is_regular_file() && dirEntry.path().extension().string() == bmpExtension)
             {
-                string outFilename = outputDir.string() + "/" + dir_entry.path().filename().string();
+                // If entry is bmp file make task
+                string filename = dirEntry.path().string();
+                string outFilename = outputDir.string() + "/" + dirEntry.path().filename().string();
                 tasks.emplace_back([filename, outFilename] {
                     FILE * file = fopen(filename.data(), "rb");
-                    if (file == nullptr)
+                    if (file != nullptr)
                     {
-                        return;
-                    }
-                    fseek(file, 0, SEEK_END);
-                    long size = ftell(file);
-                    fseek(file, 0, SEEK_SET);
+                        fseek(file, 0, SEEK_END);
+                        long size = ftell(file);
+                        fseek(file, 0, SEEK_SET);
 
-                    char * buffer = new char[size];
-                    fread(buffer, 1, size, file);
-
-                    fclose(file);
-
-                    BMP::Bitmap bmp(buffer, size);
-                    if (bmp.isValid())
-                    {
-                        bmp.makeBW();
-                    }
-
-                    {
-                        FILE * file = fopen(outFilename.data(), "wb");
-                        if (file == nullptr)
-                        {
-                            return;
-                        }
-                        fwrite(buffer, 1, size, file);
+                        char * buffer = new char[size];
+                        fread(buffer, 1, size, file);
 
                         fclose(file);
+
+                        BMP::Bitmap bmp(buffer, size);
+                        if (bmp.isValid())
+                        {
+                            bmp.makeBW();
+                        }
+
+                        FILE * fileOut = fopen(outFilename.data(), "wb");
+                        if (fileOut != nullptr)
+                        {
+                            fwrite(buffer, 1, size, fileOut);
+                            fclose(fileOut);
+                        }
                     }
                 });
             }
         }
-    }else{
+    }
+    else
+    {
         cout << config.inputPath << " is not a directory!\n";
     }
+
+    // Make and start threads
+    vector<thread> threads;
     threads.reserve(config.threadsCount);
     for (int i = 0; i < config.threadsCount; i++)
     {
@@ -169,6 +176,7 @@ int main(int argCnt, char ** args)
                 if (taskInd < tasks.size())
                 {
                     tasks[taskInd]();
+                    printf("Thread #%d finish task #%d\n", i, taskInd);
                 }
                 else
                 {
@@ -178,14 +186,16 @@ int main(int argCnt, char ** args)
             }
         }));
     }
+
+    // Waiting for threads finish
     for (auto & t : threads)
     {
         t.join();
     }
 
+    //Print elapsed time
     auto end = chrono::high_resolution_clock::now();
     auto dur = std::chrono::duration_cast<std::chrono::nanoseconds>(end - start);
-    cout << float(dur.count()) / 1000000. << endl;
-
+    printf("Total elapsed time: %f ms\n", float(dur.count()) / 1000000.);
     return 0;
 }

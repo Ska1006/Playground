@@ -43,6 +43,7 @@ namespace BMP
         InfoHeader * infoHeader{};
         uint8 ** lines;
         char * data;
+        uint32 lineSize;
         inline bool isValid() { return fileHeader != nullptr && infoHeader != nullptr; }
         void getPx(int x, int y, uint8 & R, uint8 & G, uint8 & B);
         void getPxBrt(int x, int y, uint8 & S);
