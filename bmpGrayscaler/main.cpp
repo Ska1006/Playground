@@ -5,7 +5,6 @@
 #include <cstring>
 #include <filesystem>
 #include <functional>
-#include <iostream>
 #include <thread>
 #include <vector>
 
@@ -22,14 +21,14 @@ struct Config
 
 void printHelp()
 {
-    cout
-        << "Usage: \n"
-           "  bmpGrayScaler [--help|h] [-t threadCount] [-o OutputPath] <InputPath>\n"
-           "Keys:\n"
-           "  --help or -h\tThis message\n"
-           "  -t threadCount\tCount of working threads. Default=1\n"
-           "  -o outputPath\tOutput directory. Default=<$IN>/out\n"
-           "  InputPath \tInput path Default=./in\n";
+    fprintf(stdout,
+        "Usage: \n"
+        "  bmpGrayScaler [--help|h] [-t threadCount] [-o OutputPath] <InputPath>\n"
+        "Keys:\n"
+        "  --help or -h\tThis message\n"
+        "  -t threadCount\tCount of working threads. Default=1\n"
+        "  -o outputPath\tOutput directory. Default=<$IN>/out\n"
+        "  InputPath \tInput path Default=./in\n");
 }
 
 int parseArgs(int argCnt, char ** args, Config & config)
@@ -84,8 +83,9 @@ int parseArgs(int argCnt, char ** args, Config & config)
 
 void Config::print()
 {
-    printf("Run configuration:\n  Input:\t\t%s\n  Output:\t\t%s\n  Threads count:\t%d\n\n",
+    fprintf(stdout, "Run configuration:\n  Input:\t\t%s\n  Output:\t\t%s\n  Threads count:\t%d\n\n",
         this->inputPath.data(), this->outputPath.data(), this->threadsCount);
+    fflush(stdout);
 }
 
 int main(int argCnt, char ** args)
@@ -112,12 +112,13 @@ int main(int argCnt, char ** args)
         {
             // Create output directiory if not exists
             ::fs::create_directories(outputDir);
-            cout << config.outputPath << " created!\n";
-            flush(cout);
+            fprintf(stdout, "%s created!\n", config.outputPath.data());
+            fflush(stdout);
         }
         else if (::fs::exists(outputDir) && !::fs::is_directory(outputDir))
         {
-            cout << config.outputPath << " exists and not a directory!\n";
+            fprintf(stderr, "[ERROR] %s exists and not a directory!\n", config.outputPath.data());
+            fflush(stderr);
             return 1;
         }
 
@@ -130,6 +131,7 @@ int main(int argCnt, char ** args)
                 string filename = dirEntry.path().string();
                 string outFilename = outputDir.string() + "/" + dirEntry.path().filename().string();
                 tasks.emplace_back([filename, outFilename] {
+                    // Read file
                     FILE * file = fopen(filename.data(), "rb");
                     if (file != nullptr)
                     {
@@ -142,22 +144,27 @@ int main(int argCnt, char ** args)
 
                         fclose(file);
 
+                        // Parse bmp
                         BMP::Bitmap bmp(buffer, size);
                         if (!bmp.isValid())
                         {
                             if (bmp.m_err != BMP::Bitmap::Error::NoneError)
                             {
-                                printf("%s BMP parser error:%s\n", filename.data(),
+                                fprintf(stderr, "[ERROR] %s BMP parser error:%s\n", filename.data(),
                                     bmp.errorString().data());
+                                fflush(stderr);
                             }
                             else
                             {
-                                printf("%s BMP parser error!\n", filename.data());
+                                fprintf(stderr, "[ERROR] %s BMP parser error!\n", filename.data());
+                                fflush(stderr);
                             }
                             return;
                         }
+                        // Make work
                         bmp.makeBW();
 
+                        // Write out
                         FILE * fileOut = fopen(outFilename.data(), "wb");
                         if (fileOut != nullptr)
                         {
@@ -171,7 +178,8 @@ int main(int argCnt, char ** args)
     }
     else
     {
-        cout << config.inputPath << " is not a directory!\n";
+        fprintf(stderr, "[ERROR] %s is not a directory!\n", config.inputPath.data());
+        fflush(stderr);
     }
 
     // Make and start threads
@@ -186,11 +194,13 @@ int main(int argCnt, char ** args)
                 if (taskInd < tasks.size())
                 {
                     tasks[taskInd]();
-                    printf("Thread #%d finish task #%d\n", i, taskInd);
+                    fprintf(stdout, "Thread #%d finish task #%d\n", i, taskInd);
+                    fflush(stdout);
                 }
                 else
                 {
-                    printf("Thread #%d finished\n", i);
+                    fprintf(stdout, "Thread #%d finished\n", i);
+                    fflush(stdout);
                     return;
                 }
             }
@@ -206,6 +216,6 @@ int main(int argCnt, char ** args)
     // Print elapsed time
     auto end = chrono::high_resolution_clock::now();
     auto dur = std::chrono::duration_cast<std::chrono::nanoseconds>(end - start);
-    printf("Total elapsed time: %f ms\n", float(dur.count()) / 1000000.);
+    fprintf(stdout, "Total elapsed time: %f ms\n", float(dur.count()) / 1000000.);
     return 0;
 }
