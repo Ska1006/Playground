@@ -143,10 +143,20 @@ int main(int argCnt, char ** args)
                         fclose(file);
 
                         BMP::Bitmap bmp(buffer, size);
-                        if (bmp.isValid())
+                        if (!bmp.isValid())
                         {
-                            bmp.makeBW();
+                            if (bmp.m_err != BMP::Bitmap::Error::NoneError)
+                            {
+                                printf("%s BMP parser error:%s\n", filename.data(),
+                                    bmp.errorString().data());
+                            }
+                            else
+                            {
+                                printf("%s BMP parser error!\n", filename.data());
+                            }
+                            return;
                         }
+                        bmp.makeBW();
 
                         FILE * fileOut = fopen(outFilename.data(), "wb");
                         if (fileOut != nullptr)
@@ -193,7 +203,7 @@ int main(int argCnt, char ** args)
         t.join();
     }
 
-    //Print elapsed time
+    // Print elapsed time
     auto end = chrono::high_resolution_clock::now();
     auto dur = std::chrono::duration_cast<std::chrono::nanoseconds>(end - start);
     printf("Total elapsed time: %f ms\n", float(dur.count()) / 1000000.);

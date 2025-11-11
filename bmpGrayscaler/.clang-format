@@ -1,0 +1,364 @@
+# yaml-language-server: $schema=https://json.schemastore.org/clang-format.json
+---
+# -------------------------------------
+# Глобальные настройки языка/стандарта
+# -------------------------------------
+Language: Cpp                   # Применять правила к C/C++
+Standard: Auto                  # Авто-определение стандарта C++
+
+# -------------------------------------
+# Ширина строки и отступы
+# -------------------------------------
+ColumnLimit: 100                # Целевая максимальная длина строки
+IndentWidth: 4                  # Базовый отступ в пробелах
+ContinuationIndentWidth: 4      # Отступ для строк-продолжений
+TabWidth: 4                     # Визуальная ширина табуляции
+UseTab: Never                   # Вставлять только пробелы, без табов
+LineEnding: LF                  # Нормализовать окончания строк к LF
+InsertNewlineAtEOF: true        # Гарантировать одну пустую строку в конце файла
+
+# -------------------------------------
+# Include-ы
+# -------------------------------------
+IncludeBlocks: Preserve         # Сохранять группы include как есть
+IndentPPDirectives: None        # Не задавать специальный отступ для #директив
+SortIncludes: CaseSensitive     # Сортировать include с учётом регистра
+IncludeIsMainRegex: '^.*$'      # Регулярка основного заголовка
+MainIncludeChar: Quote          # Основной заголовок через кавычки (" ")
+IncludeIsMainSourceRegex: ""    # Регулярка основного исходника (не используется)
+
+# -------------------------------------
+# Пространства имён
+# -------------------------------------
+CompactNamespaces: true         # Сворачивать вложенные namespace-ы
+FixNamespaceComments: true      # Автокоммент // namespace X
+NamespaceIndentation: All       # Отступать содержимое namespace
+ShortNamespaceLines: 0          # Не сворачивать только из-за малой длины
+
+# -------------------------------------
+# Параметры функций и аргументы вызова
+# -------------------------------------
+AlignAfterOpenBracket: DontAlign            # Не выравнивать под скобку; использовать отступ продолжения
+AllowAllArgumentsOnNextLine: true          # Можно начинать аргументы вызова с новой строки
+AllowAllParametersOfDeclarationOnNextLine: true  # Можно начинать параметры объявления с новой строки
+AllowBreakBeforeNoexceptSpecifier: OnlyWithParen # Переносить noexcept только если уже перенеслись после '('
+BinPackArguments: true                     # При переносе можно несколько аргументов на строку
+BinPackParameters: false                   # Параметры объявлений — по одному на строку при переносе
+
+# -------------------------------------
+# Массивы структур / визуальное выравнивание
+# -------------------------------------
+AlignArrayOfStructures: Right   # Выравнивать столбцы в массиве структур по правому краю
+
+# -------------------------------------
+# Спецификаторы доступа в классах
+# -------------------------------------
+AccessModifierOffset: -4        # Вынести public/protected/private влево на 4 пробела
+EmptyLineAfterAccessModifier: Never      # Пустую строку ПОСЛЕ не вставлять
+EmptyLineBeforeAccessModifier: LogicalBlock  # Пустая строка ПЕРЕД — только между логическими блоками
+SeparateDefinitionBlocks: Leave # Расстояние между определениями оставлять как есть
+IndentAccessModifiers: false    # Доп. отступ самим спецификаторам не добавлять
+
+# -------------------------------------
+# Группы выравнивания (всё отключено)
+# -------------------------------------
+AlignConsecutiveAssignments:
+  Enabled: false
+  AcrossEmptyLines: false
+  AcrossComments: false
+  AlignCompound: false
+  AlignFunctionPointers: false
+  PadOperators: false
+AlignConsecutiveBitFields:
+  Enabled: false
+  AcrossEmptyLines: false
+  AcrossComments: false
+  AlignCompound: false
+  AlignFunctionPointers: false
+  PadOperators: false
+AlignConsecutiveDeclarations:
+  Enabled: false
+  AcrossEmptyLines: false
+  AcrossComments: false
+  AlignCompound: false
+  AlignFunctionPointers: false
+  PadOperators: false
+AlignConsecutiveMacros:
+  Enabled: false
+  AcrossEmptyLines: false
+  AcrossComments: false
+  AlignCompound: false
+  AlignFunctionPointers: false
+  PadOperators: false
+
+# -------------------------------------
+# Макросы и экранированные переносы
+# -------------------------------------
+SkipMacroDefinitionBody: false  # Форматировать тела макросов как код
+AlignEscapedNewlines: Left      # Обратные слэши для переноса — максимально слева
+
+# -------------------------------------
+# switch/case и короткие конструкции
+# -------------------------------------
+AllowShortCaseExpressionOnASingleLine: false  # Длинные выражения в case переносить
+AllowShortCaseLabelsOnASingleLine: false      # Не допускать несколько меток на строке
+AlignConsecutiveShortCaseStatements:
+  Enabled: false
+  AcrossEmptyLines: false
+  AcrossComments: false
+  AlignCaseArrows: false
+  AlignCaseColons: false
+
+# -------------------------------------
+# Операторы и выравнивание комментариев
+# -------------------------------------
+AlignOperands: DontAlign        # Не выравнивать столбиком перенесённые операторы
+AlignTrailingComments:
+  Kind: Always                  # Выравнивать хвостовые комментарии по колонке
+  OverEmptyLines: 0
+
+# -------------------------------------
+# «Короткие однострочники»
+# -------------------------------------
+AllowShortBlocksOnASingleLine: Empty   # Пустые {} разрешены на одной строке
+AllowShortCompoundRequirementOnASingleLine: false
+AllowShortEnumsOnASingleLine: true
+AllowShortFunctionsOnASingleLine: All  # Маленькие функции можно в одну строку
+AllowShortIfStatementsOnASingleLine: Never  # Однострочные if запрещены
+AllowShortLambdasOnASingleLine: All
+AllowShortLoopsOnASingleLine: false
+LambdaBodyIndentation: OuterScope # Тело лямбды выравнивать по внешнему блоку
+
+# -------------------------------------
+# Тип возвращаемого значения / атрибуты / строки
+# -------------------------------------
+AlwaysBreakAfterDefinitionReturnType: None  # Тип и имя (в определениях) на одной строке
+AlwaysBreakAfterReturnType: None           # То же для объявлений
+BreakAfterReturnType: None                 # Синоним; оставлено для совместимости
+AlwaysBreakBeforeMultilineStrings: true    # Перенос перед многострочными строками
+BreakAfterAttributes: Always               # Перенос после атрибутов
+
+# -------------------------------------
+# Списки: инициализация конструктора и наследование
+# -------------------------------------
+BreakConstructorInitializers: BeforeComma  # Перенос перед запятыми в инициализаторе
+ConstructorInitializerAllOnOneLineOrOnePerLine: false  # Следовать общей логике переноса
+ConstructorInitializerIndentWidth: 4       # Ширина отступа продолжений
+PackConstructorInitializers: Never         # Не упаковывать несколько в одну строку
+BreakInheritanceList: BeforeComma          # Перенос перед запятыми в списке наследования
+
+# -------------------------------------
+# Скобки
+# -------------------------------------
+BreakBeforeBraces: Custom       # Индивидуальная схема переносов скобок ниже
+BraceWrapping:
+  AfterCaseLabel: true
+  AfterClass: true
+  AfterControlStatement: Always
+  AfterEnum: true
+  AfterExternBlock: false
+  AfterFunction: true
+  AfterNamespace: true
+  AfterObjCDeclaration: true
+  AfterStruct: true
+  AfterUnion: true
+  BeforeCatch: true
+  BeforeElse: true
+  BeforeLambdaBody: false
+  BeforeWhile: false
+  IndentBraces: false
+  SplitEmptyFunction: false
+  SplitEmptyNamespace: false
+  SplitEmptyRecord: false
+
+# -------------------------------------
+# Шаблоны и концепты
+# -------------------------------------
+BreakTemplateDeclarations: Yes  # Перенос между template<> и объявлением
+BreakBeforeConceptDeclarations: Always # Перенос перед объявлением концепта
+
+# -------------------------------------
+# Java/JS (для полноты)
+# -------------------------------------
+BreakAfterJavaFieldAnnotations: true
+SortJavaStaticImport: Before
+
+# -------------------------------------
+# Переносы вокруг операторов
+# -------------------------------------
+BreakBeforeBinaryOperators: None          # Перенос перед бинарными, кроме '='
+BreakBeforeTernaryOperators: true         # Перенос перед '?' и ':'
+
+# -------------------------------------
+# Списки в скобках и битовые поля
+# -------------------------------------
+Cpp11BracedListStyle: true       # Стиль инициализации C++11
+BitFieldColonSpacing: After      # Пробелы до/после ':' в битовых полях
+
+# -------------------------------------
+# Строковые литералы
+# -------------------------------------
+BreakAdjacentStringLiterals: true # Можно переносить между соседними литералами
+BreakStringLiterals: false        # Один длинный литерал не дробить
+
+# -------------------------------------
+# Макросы «foreach»
+# -------------------------------------
+ForEachMacros:
+  - forever
+  - foreach
+  - for_each
+  - Q_FOREACH
+  - BOOST_FOREACH
+
+# -------------------------------------
+# Отступы «особых» конструкций
+# -------------------------------------
+IndentCaseBlocks: false          # Не добавлять отступу блокам под case
+IndentCaseLabels: false          # 'case:' выровнен со 'switch'
+IndentExternBlock: AfterExternBlock  # Отступ внутри extern "C"
+IndentGotoLabels: true           # Отступать метки goto
+IndentRequiresClause: true       # Отступать requires (C++20)
+IndentWrappedFunctionNames: false # Имя функции при переносе не отступать отдельно
+
+# -------------------------------------
+# Вставки/удаления
+# -------------------------------------
+InsertBraces: true               # Добавлять {} в однострочные конструкции
+InsertTrailingCommas: None       # Не вставлять завершающие запятые
+RemoveBracesLLVM: false           # Удалять лишние {} (эвристика LLVM)
+RemoveParentheses: MultipleParentheses  # Удалять избыточные скобки (осторожно)
+RemoveSemicolon: true            # Удалять лишние ';'
+
+# -------------------------------------
+# Разделители в целочисленных литералах
+# -------------------------------------
+IntegerLiteralSeparator:
+  Binary: 0
+  BinaryMinDigits: 0
+  Decimal: 0
+  DecimalMinDigits: 0
+  Hex: 0
+  HexMinDigits: 0
+
+# -------------------------------------
+# Пустые строки
+# -------------------------------------
+KeepEmptyLines:
+  AtStartOfFile: false           # Удалять пустые строки в начале файла
+  AtEndOfFile: false             # И в конце файла
+  AtStartOfBlock: false          # И сразу после '{'
+MaxEmptyLinesToKeep: 1           # Не более одной подряд
+KeepEmptyLinesAtEOF: false       # Не держать пустые строки в конце
+
+# -------------------------------------
+# Штрафы (чем больше — тем менее охотно переносить)
+# -------------------------------------
+PenaltyBreakAssignment: 100               # Вокруг '='
+PenaltyBreakBeforeFirstCallParameter: 100 # Перед первым аргументом вызова
+PenaltyBreakComment: 0                    # Перенос комментариев дешёвый
+PenaltyBreakFirstLessLess: 0              # Перед первым '<<'
+PenaltyBreakOpenParenthesis: 100          # Сразу после '('
+PenaltyBreakScopeResolution: 1000         # 'ns::Type' держать вместе
+PenaltyBreakString: 100000                # Не дробить строки
+PenaltyBreakTemplateDeclaration: 0        # Шаблонные объявления переносить свободно
+PenaltyExcessCharacter: 10                # Небольшой штраф за выход за ColumnLimit
+PenaltyIndentedWhitespace: 100            # Избегать «лесенки» отступов
+PenaltyReturnTypeOnItsOwnLine: 50         # Сохранять тип с именем функции
+
+# -------------------------------------
+# Указатели/ссылки/квалификаторы
+# -------------------------------------
+PointerAlignment: Middle         # Пробелы как в 'Type * ptr' / 'Type const * ptr'
+SpaceAroundPointerQualifiers: Both  # Пробелы вокруг const/volatile рядом со '*'
+ReferenceAlignment: Pointer      # '&' как у указателей
+PPIndentWidth: 0                 # Отступ для продолжения строк препроцессора
+QualifierAlignment: Custom       # Пользовательский порядок квалификаторов
+QualifierOrder:
+  - friend
+  - inline
+  - static
+  - constexpr
+  - type
+  - const
+  - volatile
+  - restrict
+
+# -------------------------------------
+# Комментарии и requires
+# -------------------------------------
+ReflowComments: true             # Переформатировать длинные комментарии под ColumnLimit
+RequiresClausePosition: OwnLine  # 'requires' на отдельной строке
+RequiresExpressionIndentation: Keyword  # Выравнивание под ключевым словом
+
+# -------------------------------------
+# using-директивы и сортировка
+# -------------------------------------
+SortUsingDeclarations: Lexicographic  # Лексикографическая сортировка 'using'
+
+# -------------------------------------
+# Правила пробелов
+# -------------------------------------
+SpaceAfterCStyleCast: false      # Без пробела после (Type)expr
+SpaceAfterLogicalNot: false      # Без пробела после '!'
+SpaceAfterTemplateKeyword: true  # Пробел после 'template'
+SpaceBeforeAssignmentOperators: true # Пробел вокруг '='
+SpaceBeforeCaseColon: false      # Без пробела перед ':' в 'case'
+SpaceBeforeCpp11BracedList: false
+SpaceBeforeCtorInitializerColon: true  # Пробел перед ':' в инициализаторе
+SpaceBeforeInheritanceColon: true      # Пробел перед ':' в наследовании
+SpaceBeforeJsonColon: false           # Без пробела перед ':' в JSON-подобных местах
+SpaceBeforeParens: ControlStatements  # Пробел только у управляющих конструкций
+SpaceBeforeParensOptions:
+  AfterControlStatements: true
+  AfterForeachMacros: false
+  AfterFunctionDefinitionName: true
+  AfterFunctionDeclarationName: true
+  AfterIfMacros: false
+  AfterOverloadedOperator: true
+  AfterPlacementOperator: true
+  AfterRequiresInClause: true
+  AfterRequiresInExpression: true
+  BeforeNonEmptyParentheses: true
+SpaceBeforeRangeBasedForLoopColon: true
+SpaceBeforeSquareBrackets: false
+SpaceInEmptyBlock: false
+SpacesBeforeTrailingComments: 1
+SpacesInAngles: Never
+SpacesInContainerLiterals: true
+SpacesInLineCommentPrefix:
+  Minimum: 1
+  Maximum: -1
+SpacesInParens: Never
+SpacesInParensOptions:
+  ExceptDoubleParentheses: false
+  InCStyleCasts: false
+  InConditionalStatements: false
+  InEmptyParentheses: false
+  Other: false
+SpacesInSquareBrackets: false
+
+# -------------------------------------
+# Массивы / inline asm / параметры определения функций
+# -------------------------------------
+BreakArrays: true                         # Разрешать перенос инициализации массивов
+BreakBeforeInlineASMColon: OnlyMultiline  # Пробел/перенос перед ':' в asm только когда многострочно
+BreakFunctionDefinitionParameters: false  # Определения функций следуют общей логике переноса
+
+# -------------------------------------
+# Глобальные переключатели и pragma-исключения
+# -------------------------------------
+DisableFormat: false              # Форматирование включено
+CommentPragmas: "^ IWYU pragma:" # Комментарии, формат которых сохранять (IWYU)
+ExperimentalAutoDetectBinPacking: false  # Не авто-определять упаковку арг.
+IfMacros:
+  - KJ_IF_MAYBE
+
+# -------------------------------------
+# Objective‑C (для полноты)
+# -------------------------------------
+ObjCBinPackProtocolList: Auto
+ObjCBlockIndentWidth: 4
+ObjCBreakBeforeNestedBlockParam: true
+ObjCSpaceAfterProperty: false
+ObjCSpaceBeforeProtocolList: true
