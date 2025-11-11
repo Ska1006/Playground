@@ -9,6 +9,9 @@ add_executable(bmpGrayscaler main.cpp
     bitmap.h bitmap.cpp
 )
 
+find_package(Threads REQUIRED)
+target_link_libraries(bmpGrayscaler Threads::Threads)
+
 include(GNUInstallDirs)
 install(TARGETS bmpGrayscaler
     LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}

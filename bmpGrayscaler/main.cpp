@@ -4,11 +4,11 @@
 #include <chrono>
 #include <cstring>
 #include <filesystem>
-#include <fstream>
 #include <functional>
 #include <iostream>
 #include <thread>
 #include <vector>
+
 using namespace std;
 namespace fs = std::filesystem;
 struct Config
